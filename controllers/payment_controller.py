@@ -58,21 +58,22 @@ class PaymentsController:
     try:
       payment = Payment.query.get(str(payment_id)) 
 
+      if not payment:
+        return render_template('404.html')
+
       if payment.paid:
         return render_template('confirmed_payment.html',
                                 payment_id=payment.id,
                                 value=payment.value
                               )
-
-      if payment is not None:
-        return render_template('payment.html',
-                                  payment_id=payment.id,
-                                  value=payment.value,
-                                  host="http://127.0.0.1:5000/",
-                                  qr_code=payment.qr_code
-                                  )
-      else:
-        return render_template('404.html')
+      
+      return render_template('payment.html',
+                              payment_id=payment.id,
+                              value=payment.value,
+                              host="http://127.0.0.1:5000/",
+                              qr_code=payment.qr_code
+                              )
+      
               
     except Exception as e:
       return render_template('404.html', message=str(e))
